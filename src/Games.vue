@@ -48,7 +48,7 @@
     },
     methods: {
       fetchData() {
-        this.$http.get('http://localhost:8080/games')
+        this.$http.get('games')
         .then(response => {
            return response.json()
         })
@@ -60,7 +60,7 @@
       save(game) {
         game.offeredOdds1 = parseFloat(game.offeredOdds1)
         game.offeredOdds2 = parseFloat(game.offeredOdds2)
-       this.$http.post('http://localhost:8080/game', game)
+       this.$http.post('game', game)
        .then(this.fetchData())
        .catch(err => console.log(err))
      },
@@ -76,7 +76,7 @@
      },
      bet: function(game) {
        game.betAmount = parseFloat(game.betAmount)
-         this.$http.post('http://localhost:8080/games/bet', game)
+         this.$http.post('games/bet', game)
      },
      canBet: function(game) {
        return !game.betPlaced && game.predictedWinner && game.betAmount > 0
