@@ -40,6 +40,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     data() {
       return {
@@ -48,19 +49,15 @@
     },
     methods: {
       fetchData() {
-        this.$http.get('games')
+        axios.get('/games')
         .then(response => {
-           return response.json()
-        })
-        .then(data => {
-          console.log(data)
-          this.games = data
+          this.games = response.data
         })
       },
       save(game) {
         game.offeredOdds1 = parseFloat(game.offeredOdds1)
         game.offeredOdds2 = parseFloat(game.offeredOdds2)
-       this.$http.post('game', game)
+       axios.post('/game', game)
        .then(this.fetchData())
        .catch(err => console.log(err))
      },
@@ -76,7 +73,7 @@
      },
      bet: function(game) {
        game.betAmount = parseFloat(game.betAmount)
-         this.$http.post('games/bet', game)
+         axios.post('/games/bet', game)
      },
      canBet: function(game) {
        return !game.betPlaced && game.predictedWinner && game.betAmount > 0
