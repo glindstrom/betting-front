@@ -33,7 +33,7 @@
           </select>
         </td>
         <td><input type="number" step="0.01" v-model="g.betAmount"></td>
-        <td><button @click="bet(g)">Bet</button></td>
+        <td><button :disabled="!canBet(g)" @click="bet(g)">Bet</button></td>
       </tr>
     </table>
   </div>
@@ -78,8 +78,8 @@
        game.betAmount = parseFloat(game.betAmount)
          this.$http.post('http://localhost:8080/games/bet', game)
      },
-     test: function(game) {
-       console.log(game.predictedWinner)
+     canBet: function(game) {
+       return !game.betPlaced && game.predictedWinner && game.betAmount > 0
      }
    },
    beforeMount() {
