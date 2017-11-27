@@ -24,7 +24,7 @@
         <td>{{ g.odds2.toFixed(2) }}</td>
         <td><input :style="odds1Style(g)" type="number" step="0.001" @blur="save(g)" v-model="g.offeredOdds1"></td>
         <td><input :style="odds2Style(g)" type="number" step="0.001" @blur="save(g)" v-model="g.offeredOdds2"></td>
-        <td>{{ g.betSize.toFixed(2) }}</td>
+        <td>{{ round(g.betSize) }}</td>
         <td>
           <select v-model="g.predictedWinner">
             <option>{{ g.team1 }}</option>
@@ -51,7 +51,7 @@
       fetchData() {
         axios.get('/games')
         .then(response => {
-          this.games = response.data
+          this.games = response.data.filter(game => game.league !== 'NFL')
         })
       },
       save(game) {
@@ -73,10 +73,14 @@
      },
      bet: function(game) {
        game.betAmount = parseFloat(game.betAmount)
-         axios.post('/games/bet', game)
+       axios.post('/games/bet', game)
+       game.betPlaced = true
      },
      canBet: function(game) {
        return !game.betPlaced && game.predictedWinner && game.betAmount > 0
+     },
+     round: function round(num) {
+       return (Math.round(num*20)/20).toFixed(2)
      }
    },
    beforeMount() {
